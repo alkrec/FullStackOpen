@@ -1,15 +1,22 @@
 import { useState } from 'react'
 
 const Statistics = (props) => {
+  if (props.totalCount !== 0) {
+      return (
+        <>
+          <h2>statistics</h2>
+          <Display name={props.goodCountText} output={props.goodCount}/>
+          <Display name={props.neutralCountText} output={props.neutralCount}/>
+          <Display name={props.badCountText} output={props.badCount}/>
+          <Display name={props.totalCountText} output={props.totalCount}/>
+          <Display name={props.avgText} output={props.avg}/>
+          <Display name={props.positiveText} output={`${props.positive} %`}/>
+        </>
+      )
+  }
   return (
     <>
-      <h2>statistics</h2>
-      <Display name={props.goodCountText} output={props.goodCount}/>
-      <Display name={props.neutralCountText} output={props.neutralCount}/>
-      <Display name={props.badCountText} output={props.badCount}/>
-      <Display name={props.totalCountText} output={props.totalCount}/>
-      <Display name={props.avgText} output={props.avg}/>
-      <Display name={props.positiveText}output={`${props.positive} %`}/>
+      <p>No feedback given</p>
     </>
   )
 }
