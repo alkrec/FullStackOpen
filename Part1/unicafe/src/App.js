@@ -2,17 +2,21 @@ import { useState } from 'react'
 
 const Statistics = (props) => {
   if (props.totalCount !== 0) {
-      return (
-        <>
-          <h2>statistics</h2>
-          <StatisticLine name="good" output={props.goodCount}/>
-          <StatisticLine name="neutral" output={props.neutralCount}/>
-          <StatisticLine name="bad" output={props.badCount}/>
-          <StatisticLine name="total" output={props.totalCount}/>
-          <StatisticLine name="average" output={props.avg}/>
-          <StatisticLine name="positive" output={`${props.positive} %`}/>
-        </>
-      )
+    return (
+      <>
+        <h2>statistics</h2>
+        <table>
+          <tbody>
+            <tr><StatisticLine name="good" output={props.goodCount} /></tr>
+            <tr><StatisticLine name="neutral" output={props.neutralCount} /></tr>
+            <tr><StatisticLine name="bad" output={props.badCount} /></tr>
+            <tr><StatisticLine name="total" output={props.totalCount} /></tr>
+            <tr><StatisticLine name="average" output={props.avg} /></tr>
+            <tr><StatisticLine name="positive" output={`${props.positive} %`} /></tr>
+          </tbody>
+        </table>
+      </>
+    )
   }
   return (
     <>
@@ -29,7 +33,7 @@ const Button = (props) => {
 
 const StatisticLine = (props) => {
   return (
-    <p>{props.name} {props.output}</p>
+    <td>{props.name} {props.output}</td>
   )
 }
 
@@ -47,7 +51,7 @@ const App = () => {
     setGood(updatedGood)
     setTotal(updatedTotal)
     setAvg((updatedGood - bad) / updatedTotal)
-    setPositive((updatedGood/updatedTotal) * 100)
+    setPositive((updatedGood / updatedTotal) * 100)
   }
 
   const handleNeutralEvent = () => {
@@ -56,7 +60,7 @@ const App = () => {
     setNeutral(updatedNeutral)
     setTotal(updatedTotal)
     setAvg((good - bad) / updatedTotal)
-    setPositive((good/updatedTotal) * 100)
+    setPositive((good / updatedTotal) * 100)
   }
 
   const handleBadEvent = () => {
@@ -65,7 +69,7 @@ const App = () => {
     setBad(updatedBad)
     setTotal(updatedTotal)
     setAvg((good - updatedBad) / updatedTotal)
-    setPositive((good/updatedTotal) * 100)
+    setPositive((good / updatedTotal) * 100)
   }
 
   return (
@@ -73,8 +77,8 @@ const App = () => {
       <h2>give feedback</h2>
       <Button handleClick={handleGoodEvent} text='good' />
       <Button handleClick={handleNeutralEvent} text='neutral' />
-      <Button handleClick={handleBadEvent} text='bad'/>
-      <Statistics 
+      <Button handleClick={handleBadEvent} text='bad' />
+      <Statistics
         goodCount={good}
         neutralCount={neutral}
         badCount={bad}
