@@ -1,5 +1,19 @@
 import { useState } from 'react'
 
+const Statistics = (props) => {
+  return (
+    <>
+      <h2>statistics</h2>
+      <Display name={props.goodCountText} output={props.goodCount}/>
+      <Display name={props.neutralCountText} output={props.neutralCount}/>
+      <Display name={props.badCountText} output={props.badCount}/>
+      <Display name={props.totalCountText} output={props.totalCount}/>
+      <Display name={props.avgText} output={props.avg}/>
+      <Display name={props.positiveText}output={`${props.positive} %`}/>
+    </>
+  )
+}
+
 const Button = (props) => {
   return (
     <button onClick={props.handleClick}>{props.text}</button>
@@ -53,13 +67,20 @@ const App = () => {
       <Button handleClick={handleGoodEvent} text='good' />
       <Button handleClick={handleNeutralEvent} text='neutral' />
       <Button handleClick={handleBadEvent} text='bad'/>
-      <h2>statistics</h2>
-      <Display name='good' output={good}/>
-      <Display name='neutral' output={neutral}/>
-      <Display name='bad' output={bad}/>
-      <Display name='all' output={total}/>
-      <Display name='average' output={avg}/>
-      <Display name='positive' output={`${positive} %`}/>
+      <Statistics 
+        goodCountText="good"
+        goodCount={good}
+        neutralCountText="neutral"
+        neutralCount={neutral}
+        badCountText="bad"
+        badCount={bad}
+        totalCountText="total"
+        totalCount={total}
+        avgText="average"
+        avg={avg}
+        positiveText="positive"
+        positive={positive}
+      />
     </div>
   )
 
