@@ -5,12 +5,12 @@ const Statistics = (props) => {
       return (
         <>
           <h2>statistics</h2>
-          <Display name={props.goodCountText} output={props.goodCount}/>
-          <Display name={props.neutralCountText} output={props.neutralCount}/>
-          <Display name={props.badCountText} output={props.badCount}/>
-          <Display name={props.totalCountText} output={props.totalCount}/>
-          <Display name={props.avgText} output={props.avg}/>
-          <Display name={props.positiveText} output={`${props.positive} %`}/>
+          <StatisticLine name="good" output={props.goodCount}/>
+          <StatisticLine name="neutral" output={props.neutralCount}/>
+          <StatisticLine name="bad" output={props.badCount}/>
+          <StatisticLine name="total" output={props.totalCount}/>
+          <StatisticLine name="average" output={props.avg}/>
+          <StatisticLine name="positive" output={`${props.positive} %`}/>
         </>
       )
   }
@@ -27,7 +27,7 @@ const Button = (props) => {
   )
 }
 
-const Display = (props) => {
+const StatisticLine = (props) => {
   return (
     <p>{props.name} {props.output}</p>
   )
@@ -75,17 +75,11 @@ const App = () => {
       <Button handleClick={handleNeutralEvent} text='neutral' />
       <Button handleClick={handleBadEvent} text='bad'/>
       <Statistics 
-        goodCountText="good"
         goodCount={good}
-        neutralCountText="neutral"
         neutralCount={neutral}
-        badCountText="bad"
         badCount={bad}
-        totalCountText="total"
         totalCount={total}
-        avgText="average"
         avg={avg}
-        positiveText="positive"
         positive={positive}
       />
     </div>
