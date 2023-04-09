@@ -10,7 +10,7 @@ const Content = ({ parts }) => {
   return (
     <div>
       {listParts}
-      <p>total of {total} exercises</p>
+      <strong>total of {total} exercises</strong>
     </div>
   )
 }
