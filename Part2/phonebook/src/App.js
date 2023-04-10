@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import axios from 'axios'
 import personService from './services/persons'
 
 const App = () => {
@@ -26,8 +25,8 @@ const App = () => {
     event.preventDefault()
     const foundPerson = persons.find(person => person.name === newName)
 
-    if(foundPerson === undefined) {
-      const newPerson = {name: newName, number: newNumber}
+    if (foundPerson === undefined) {
+      const newPerson = { name: newName, number: newNumber }
 
       personService.create(newPerson)
         .then(createdPerson => {
@@ -58,26 +57,35 @@ const App = () => {
     return result
   })
 
-  // const remove = (id) => {
-  //   personService.remove(id)
-  //       .then(response => console.log(response))
-  //       .catch(error => console.log(error))
-  // }
+  const remove = (event) => {
+    const id = parseInt(event.target.value)
+    const removedPerson = persons.find(person => person.id === id)
+
+    if (window.confirm(`Delete ${removedPerson.name}`) == true) {
+      personService.remove(id)
+        .then(() => {
+          const newPersons = persons.filter(person => person.id !== id)
+          setPersons(newPersons)
+          // console.log(newPersons)
+        })
+        .catch(error => console.log(error))
+    }
+  }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter searchName={searchName} handleSearchChange={handleSearchChange}/>
+      <Filter searchName={searchName} handleSearchChange={handleSearchChange} />
 
       <h2>add a new</h2>
       <PersonForm
         newName={newName}
-        newNumber ={newNumber}
-        handleNameChange = {handleNameChange}
-        handleNumberChange = {handleNumberChange}
-        addName = {addName}/>
+        newNumber={newNumber}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+        addName={addName} />
       <h2>Numbers</h2>
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} remove={remove} />
     </div>
   )
 }
