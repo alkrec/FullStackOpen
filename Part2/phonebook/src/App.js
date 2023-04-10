@@ -36,7 +36,19 @@ const App = () => {
         })
         .catch(error => console.log(error))
     } else {
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook, replace old number
+      with new one?`) === true) {
+        const updatedPerson = {...foundPerson, number: newNumber}
+        personService.update(updatedPerson)
+          .then(updatedPersonFromServer => {
+            setPersons(persons.map(person => person.id !== updatedPersonFromServer.id ? person : updatedPerson))
+            setNewName('')
+            setNewNumber('')
+            console.log(updatedPerson)
+          })
+          .catch(error => console.log(error))
+        // console.log(foundPerson.id);
+      }
     }
   }
 
@@ -61,7 +73,7 @@ const App = () => {
     const id = parseInt(event.target.value)
     const removedPerson = persons.find(person => person.id === id)
 
-    if (window.confirm(`Delete ${removedPerson.name}`) == true) {
+    if (window.confirm(`Delete ${removedPerson.name}`) === true) {
       personService.remove(id)
         .then(() => {
           const newPersons = persons.filter(person => person.id !== id)
