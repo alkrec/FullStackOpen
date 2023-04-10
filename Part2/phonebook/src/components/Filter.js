@@ -4,7 +4,7 @@ const Filter = (props) => {
     return (
         <div>
             filter shown with <input value={searchName} onChange={handleSearchChange}/>
-            </div>
+        </div>
     )
 }
 

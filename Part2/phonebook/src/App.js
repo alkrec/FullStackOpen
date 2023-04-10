@@ -58,6 +58,12 @@ const App = () => {
     return result
   })
 
+  // const remove = (id) => {
+  //   personService.remove(id)
+  //       .then(response => console.log(response))
+  //       .catch(error => console.log(error))
+  // }
+
   return (
     <div>
       <h2>Phonebook</h2>
