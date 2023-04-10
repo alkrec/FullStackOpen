@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import axios from 'axios'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,36 +13,39 @@ const App = () => {
 
   useEffect(() => {
     console.log('use effect triggered')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log(response.data)
-        setPersons(response.data)
+
+    personService.getAll()
+      .then(initialData => {
+        setPersons(initialData)
       })
+      .catch(error => console.log(error))
+
   }, [])
 
   const addName = (event) => {
     event.preventDefault()
+    const foundPerson = persons.find(person => person.name === newName)
 
-    const found = persons.find(person => person.name === newName)
+    if(foundPerson === undefined) {
+      const newPerson = {name: newName, number: newNumber}
 
-    if(found === undefined) {
-      const nameObject = {name: newName, number: newNumber}
-      setPersons(persons.concat(nameObject))
-      setNewName('')
-      setNewNumber('')
+      personService.create(newPerson)
+        .then(createdPerson => {
+          setPersons(persons.concat(createdPerson))
+          setNewName('')
+          setNewNumber('')
+        })
+        .catch(error => console.log(error))
     } else {
       alert(`${newName} is already added to phonebook`)
     }
   }
 
   const handleNameChange = (event) => {
-    //console.log(event.target.value)
     setNewName(event.target.value)
   }
 
   const handleNumberChange = (event) => {
-    //console.log(event.target.value)
     setNewNumber(event.target.value)
   }
 
@@ -50,10 +54,7 @@ const App = () => {
   }
 
   const personsToShow = persons.filter((person) => {
-    //console.log(person.name)
-    //console.log(searchName)
     const result = person.name.toLowerCase().includes(searchName.toLowerCase())
-    //console.log(result)
     return result
   })
 
@@ -63,8 +64,8 @@ const App = () => {
       <Filter searchName={searchName} handleSearchChange={handleSearchChange}/>
 
       <h2>add a new</h2>
-      <PersonForm 
-        newName={newName} 
+      <PersonForm
+        newName={newName}
         newNumber ={newNumber}
         handleNameChange = {handleNameChange}
         handleNumberChange = {handleNumberChange}
