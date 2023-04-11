@@ -3,12 +3,15 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchName, setSearchName] = useState('')
+  const [message, setMessage] = useState(null)
+  const [isError, setIsError] = useState(false)
 
   useEffect(() => {
     console.log('use effect triggered')
@@ -31,6 +34,12 @@ const App = () => {
       personService.create(newPerson)
         .then(createdPerson => {
           setPersons(persons.concat(createdPerson))
+
+          setMessage(`Added ${createdPerson.name}`)
+          setIsError(false)
+          setTimeout(() => {
+            setMessage(null)}, 5000)
+
           setNewName('')
           setNewNumber('')
         })
@@ -45,8 +54,22 @@ const App = () => {
             setNewName('')
             setNewNumber('')
             console.log(updatedPerson)
-          })
-          .catch(error => console.log(error))
+
+            setMessage(`Added ${updatedPerson.name}`)
+            setIsError(false)
+            setTimeout(() => {
+              setMessage(null)}, 5000)
+
+            }
+            )
+          .catch((error) => {
+            setMessage(`Information of ${updatedPerson.name} has already been removed from server`)
+            setIsError(true)
+            setTimeout(() => {
+              setMessage(null)}, 5000)
+            console.log(error)
+          }
+          )
         // console.log(foundPerson.id);
       }
     }
@@ -87,6 +110,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} isError={isError}/>
+
       <Filter searchName={searchName} handleSearchChange={handleSearchChange} />
 
       <h2>add a new</h2>
