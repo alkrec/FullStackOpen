@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import countryService from './services/countries'
+import { useState, useEffect } from 'react'
+import Countries from './components/Countries'
 
-function App() {
+const App = () => {
+  const [countries, setCountries] = useState([])
+  const [searchedCountry, setSearchedCountry] = useState('')
+
+
+  //
+  // Summary: fetch initial country data
+  useEffect(() => {
+    countryService.getAll()
+      .then((initialCountries) => {
+        setCountries(initialCountries)
+      })}, [])  
+
+
+  //
+  // Summary: handles the setting of the search term state
+  const handleChange = (event) => {
+    setSearchedCountry(event.target.value)
+  }
+  
+
+  //
+  // Summary: Filter the displayed list by the search term
+  const countriesToDisplay = countries.filter(c => {
+    const countryLowerCase = c.name.common.toLowerCase()
+    const country = countryLowerCase.includes(searchedCountry.toLowerCase())
+    return country
+  })
+
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      find countries
+      <input onChange={handleChange}/>
+      <Countries countriesToDisplay={countriesToDisplay}/>  
     </div>
   );
 }
