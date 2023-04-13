@@ -1,12 +1,6 @@
-import { useEffect, useState } from 'react'
-import weather from '../services/weather'
-
 const Countries = (props) => {
     const {countriesToDisplay, handleClick, weatherData, selectedCountry} = props
-    // const [country, setCountry]
     // console.log(countriesToDisplay.length)
-    console.log('country', selectedCountry)
-    console.log('weather', weatherData)
 
     if(selectedCountry && weatherData) {
       return (
@@ -27,10 +21,10 @@ const Countries = (props) => {
         )
     }
   
-    if (countriesToDisplay.length === 0) { //No match
+    if (!countriesToDisplay) { //No match
+      return <p>Enter a country</p>      
+    } else if (countriesToDisplay.length === 0) {  //No user input
       return <p>No matches</p>
-    } else if (countriesToDisplay.length === 250) {  //No user input
-      return <p>Enter a country</p>
     } else if (countriesToDisplay.length > 10) { // over 10 results
       return <p>Too many matches, specify another filter</p>
     } else { // under 10 results

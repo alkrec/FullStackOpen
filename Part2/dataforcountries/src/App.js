@@ -5,8 +5,7 @@ import Countries from './components/Countries'
 
 const App = () => {
   const [countries, setCountries] = useState([])
-  const [searchedCountry, setSearchedCountry] = useState('')
-  const [filteredCountries, setFilteredCountries] = useState([])
+  const [filteredCountries, setFilteredCountries] = useState(null)
   const [selectedCountry, setSelectedCountry] = useState(null)
   const [weatherData, setWeatherData] = useState(null)
 
@@ -22,8 +21,6 @@ const App = () => {
   // Summary: fetch weather data of single country
   useEffect(() => {
     if(selectedCountry) {
-      // console.log('print')
-      console.log(selectedCountry.capitalInfo)
       const lat = selectedCountry.capitalInfo.latlng[0]
       const lon = selectedCountry.capitalInfo.latlng[1]
       console.log(lon)
@@ -38,7 +35,6 @@ const App = () => {
   // Summary: handles the setting of the search term state
   const handleChange = (event) => {
     const inputtedValue = event.target.value
-    setSearchedCountry(inputtedValue)
 
     const matchingCountries = countries.filter(c => {
       const countryLowerCase = c.name.common.toLowerCase()
@@ -53,6 +49,10 @@ const App = () => {
     } else {
       setSelectedCountry(null)
     }
+    
+    if(event.target.value === '') {
+      setFilteredCountries(null)
+    }
   }
 
 
@@ -60,9 +60,11 @@ const App = () => {
   // Summary: Set state of searched term when 'show' button is clicked
   const handleClick = (event) => {
     const countryName = event.target.value
-    setSearchedCountry(countryName)
+    console.log(countryName)
+    const foundCountry = countries.find(c=> c.name.common === countryName)
+    setSelectedCountry(foundCountry)
   }
-  
+
 
   return (
     <div>
