@@ -1,24 +1,34 @@
+import { useEffect, useState } from 'react'
+import weather from '../services/weather'
+
 const Countries = (props) => {
-    const {countriesToDisplay, handleClick} = props
+    const {countriesToDisplay, handleClick, weatherData, selectedCountry} = props
+    // const [country, setCountry]
+    // console.log(countriesToDisplay.length)
+    console.log('country', selectedCountry)
+    console.log('weather', weatherData)
+
+    if(selectedCountry && weatherData) {
+      return (
+        <div key={selectedCountry.ccn3}>
+            <h2>{selectedCountry.name.common}</h2>
+            <p>capital {selectedCountry.capital}</p>
+            <p>area {selectedCountry.area}</p>
+            <h3>languages</h3>
+            <ul>
+              {Object.values(selectedCountry.languages).map((value, index) => <li key={index}>{value}</li>)}
+            </ul>
+            <img src={selectedCountry.flags.png} />
+            <h2>Weather in {selectedCountry.capital}</h2>
+            <p>temperature {weatherData.main.temp}</p>
+            <img src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`}/>
+            <p>wind {weatherData.wind.speed} m/s</p>
+        </div>
+        )
+    }
   
     if (countriesToDisplay.length === 0) { //No match
       return <p>No matches</p>
-    } else if (countriesToDisplay.length === 1) {  //one match
-        return (
-            countriesToDisplay.map(country => {
-                return (
-                    <div key={country.ccn3}>
-                        <h2>{country.name.common}</h2>
-                        <p>capital {country.capital}</p>
-                        <p>area {country.area}</p>
-                        <h3>languages</h3>
-                        <ul>
-                          {Object.values(country.languages).map((value, index) => <li key={index}>{value}</li>)}
-                        </ul>
-                        <img src={country.flags.png} />
-                    </div>
-                )})
-        )
     } else if (countriesToDisplay.length === 250) {  //No user input
       return <p>Enter a country</p>
     } else if (countriesToDisplay.length > 10) { // over 10 results
@@ -30,7 +40,7 @@ const Countries = (props) => {
           <button onClick={handleClick} value={country.name.common}>show</button>
         </div>
         })
-    }
+      }
   }
-
+  
   export default Countries
