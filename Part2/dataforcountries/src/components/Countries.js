@@ -1,7 +1,7 @@
 const Countries = (props) => {
     const {countriesToDisplay, handleClick, weatherData, selectedCountry} = props
-    // console.log(countriesToDisplay.length)
 
+    //if there is a single selected Country that has weather data, return all info
     if(selectedCountry && weatherData) {
       return (
         <div key={selectedCountry.ccn3}>
@@ -21,9 +21,9 @@ const Countries = (props) => {
         )
     }
   
-    if (!countriesToDisplay) { //No match
+    if (!countriesToDisplay) { //No user input
       return <p>Enter a country</p>      
-    } else if (countriesToDisplay.length === 0) {  //No user input
+    } else if (countriesToDisplay.length === 0) {  //No match
       return <p>No matches</p>
     } else if (countriesToDisplay.length > 10) { // over 10 results
       return <p>Too many matches, specify another filter</p>

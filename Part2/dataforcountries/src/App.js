@@ -23,7 +23,7 @@ const App = () => {
     if(selectedCountry) {
       const lat = selectedCountry.capitalInfo.latlng[0]
       const lon = selectedCountry.capitalInfo.latlng[1]
-      console.log(lon)
+      
       weatherService
         .getWeather(lat, lon)
         .then(weatherData => setWeatherData(weatherData))
@@ -36,20 +36,24 @@ const App = () => {
   const handleChange = (event) => {
     const inputtedValue = event.target.value
 
+    //Gather matching countries based on search input
     const matchingCountries = countries.filter(c => {
       const countryLowerCase = c.name.common.toLowerCase()
       const matchedCountry = countryLowerCase.includes(inputtedValue.toLowerCase())
       return matchedCountry
     })
     
+    //set state of filtered countries based on search input
     setFilteredCountries(matchingCountries)
 
+    //if only one country is returned based on search input, set state of selected country
     if(matchingCountries.length === 1) {
       setSelectedCountry(matchingCountries[0])
     } else {
       setSelectedCountry(null)
     }
     
+    //if no user input, set filtered countries to null
     if(event.target.value === '') {
       setFilteredCountries(null)
     }
