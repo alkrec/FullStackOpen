@@ -1,5 +1,5 @@
 const Countries = (props) => {
-    const {countriesToDisplay} = props
+    const {countriesToDisplay, handleClick} = props
   
     if (countriesToDisplay.length === 0) { //No match
       return <p>No matches</p>
@@ -24,7 +24,12 @@ const Countries = (props) => {
     } else if (countriesToDisplay.length > 10) { // over 10 results
       return <p>Too many matches, specify another filter</p>
     } else { // under 10 results
-      return countriesToDisplay.map(country => <p key={country.ccn3}>{country.name.common}</p>)
+      return countriesToDisplay.map(country => {
+        return <div key={country.ccn3}>
+          {country.name.common}
+          <button onClick={handleClick} value={country.name.common}>show</button>
+        </div>
+        })
     }
   }
 

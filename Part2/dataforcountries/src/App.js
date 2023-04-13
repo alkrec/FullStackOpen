@@ -21,6 +21,13 @@ const App = () => {
   const handleChange = (event) => {
     setSearchedCountry(event.target.value)
   }
+
+  //
+  // Summary: Set state of searched term when 'show' button is clicked
+  const handleClick = (event) => {
+    const countryName = event.target.value
+    setSearchedCountry(countryName)
+  }
   
 
   //
@@ -36,7 +43,10 @@ const App = () => {
     <div>
       find countries
       <input onChange={handleChange}/>
-      <Countries countriesToDisplay={countriesToDisplay}/>  
+      <Countries 
+        countriesToDisplay={countriesToDisplay}
+        handleClick={handleClick}
+      />  
     </div>
   );
 }
