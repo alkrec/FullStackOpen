@@ -12,9 +12,12 @@ const Countries = (props) => {
                         <p>capital {country.capital}</p>
                         <p>area {country.area}</p>
                         <h3>languages</h3>
-                        <p>{country.flags.png}</p>
+                        <ul>
+                          {Object.values(country.languages).map((value, index) => <li key={index}>{value}</li>)}
+                        </ul>
+                        <img src={country.flags.png} />
                     </div>
-                    )})
+                )})
         )
     } else if (countriesToDisplay.length === 250) {  //No user input
       return <p>Enter a country</p>
@@ -24,4 +27,5 @@ const Countries = (props) => {
       return countriesToDisplay.map(country => <p key={country.ccn3}>{country.name.common}</p>)
     }
   }
+
   export default Countries
