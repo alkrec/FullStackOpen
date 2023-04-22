@@ -92,16 +92,15 @@ const App = () => {
     return result
   })
 
-  const remove = (event) => {
-    const id = parseInt(event.target.value)
-    const removedPerson = persons.find(person => person.id === id)
+  const remove = (deletePerson) => {
+    const removedPerson = persons.find(person => person.id === deletePerson.id)
+    console.log(persons)
 
     if (window.confirm(`Delete ${removedPerson.name}`) === true) {
-      personService.remove(id)
+      personService.remove(deletePerson.id)
         .then(() => {
-          const newPersons = persons.filter(person => person.id !== id)
+          const newPersons = persons.filter(person => person.id !== deletePerson.id)
           setPersons(newPersons)
-          // console.log(newPersons)
         })
         .catch(error => console.log(error))
     }
