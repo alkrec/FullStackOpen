@@ -70,14 +70,13 @@ const App = () => {
             }
             )
           .catch((error) => {
-            setMessage(`Information of ${updatedPerson.name} has already been removed from server`)
+            setMessage(error.response.data.error)
             setIsError(true)
             setTimeout(() => {
               setMessage(null)}, 5000)
             console.log(error)
           }
           )
-        // console.log(foundPerson.id);
       }
     }
   }
