@@ -43,11 +43,18 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+          console.log(error)
+          setMessage(error.response.data.error)
+          setIsError(true)
+          setTimeout(() => {
+            setMessage(null)}, 5000)
+        })
     } else {
       if (window.confirm(`${newName} is already added to phonebook, replace old number
       with new one?`) === true) {
         const updatedPerson = {...foundPerson, number: newNumber}
+        console.log(updatedPerson)
         personService.update(updatedPerson)
           .then(updatedPersonFromServer => {
             setPersons(persons.map(person => person.id !== updatedPersonFromServer.id ? person : updatedPerson))
