@@ -62,7 +62,7 @@ const App = () => {
             setNewNumber('')
             console.log(updatedPerson)
 
-            setMessage(`Added ${updatedPerson.name}`)
+            setMessage(`Updated ${updatedPerson.name}`)
             setIsError(false)
             setTimeout(() => {
               setMessage(null)}, 5000)
