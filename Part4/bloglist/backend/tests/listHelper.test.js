@@ -155,6 +155,58 @@ const TwoBlogsWithSameAmtWritten = [
   }
 ]
 
+const TwoAuthorsWithSameLikes = [
+  {
+    _id: '5a422a851b54a676234d17f7',
+    title: 'React patterns',
+    author: 'Michael Chan',
+    url: 'https://reactpatterns.com/',
+    likes: 25,
+    __v: 0
+  },
+  {
+    _id: '5a422aa71b54a676234d17f8',
+    title: 'Go To Statement Considered Harmful',
+    author: 'Michael Chan',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 25,
+    __v: 0
+  },
+  {
+    _id: '5a422b3a1b54a676234d17f9',
+    title: 'Canonical string reduction',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+    likes: 25,
+    __v: 0
+  },
+  {
+    _id: '5a422b891b54a676234d17fa',
+    title: 'First class tests',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+    likes: 25,
+    __v: 0
+  },
+  {
+    _id: '5a422ba71b54a676234d17fb',
+    title: 'TDD harms architecture',
+    author: 'Michael Chan',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+    likes: 0,
+    __v: 0
+  },
+  {
+    _id: '5a422bc61b54a676234d17fc',
+    title: 'Type wars',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+    likes: 0,
+    __v: 0
+  }
+]
+
+
 const listWithOneBlog = [
   {
     _id: '5a422aa71b54a676234d17f8',
@@ -258,6 +310,46 @@ describe('Most Blogs Written', () => {
       {
         author: '',
         blogs: 0
+      }
+    )
+  })
+})
+
+
+//
+// Summary: Test function for find the author with most likes
+describe('Author with most likes', () => {
+  test('author likes - on large list', () => {
+    const result = listHelper.authorMostLikes(largeBlogList)
+    expect(result).toEqual(
+      {
+        author: 'Edsger W. Dijkstra',
+        likes: 17
+      }
+    )
+  })
+
+  test('author likes - list with same amount of likes', () => {
+    const result = listHelper.authorMostLikes(TwoAuthorsWithSameLikes)
+    expect(result).toEqual(
+      {
+        author: 'Michael Chan',
+        likes: 50
+      }
+      ||
+      {
+        author: 'Edsger W. Dijkstra',
+        likes: 50
+      }
+    )
+  })
+
+  test('author likes - list with empty array', () => {
+    const result = listHelper.authorMostLikes(emptyArray)
+    expect(result).toEqual(
+      {
+        author: '',
+        likes: 0
       }
     )
   })
