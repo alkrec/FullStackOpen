@@ -32,6 +32,11 @@ test('all blogs are returned', async () => {
 
 })
 
+test('check identifier is named id', async () => {
+  const response = await api.get('/api/blogs')
+  expect(response.body[0].id).toBeDefined() //checks if 'id' returns a value
+})
+
 
 //
 // Summary: closes the database connection
