@@ -3,8 +3,8 @@ const Blog = require('../models/blog')
 
 //
 // Summary: GET - get all blog posts
-blogsRouter.get('/', (request, response, next) => {
-  Blog
+blogsRouter.get('/', async (request, response, next) => {
+  await Blog
     .find({})
     .then(blogs => {
       response.json(blogs)
