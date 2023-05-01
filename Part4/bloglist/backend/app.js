@@ -1,5 +1,6 @@
 const config = require('./utils/config')
 const express = require('express')
+require('express-async-errors') //eliminates the need to explicitly write try/catch for controller methods
 const app = express()
 const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')

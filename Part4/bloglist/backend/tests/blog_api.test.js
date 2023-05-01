@@ -23,11 +23,15 @@ beforeEach( async () => {
   //The last line of code await Promise.all(promiseArray) waits until every promise for saving a note is finished,
   //meaning that the database has been initialized.
 
-  console.log('done')
+  console.log('database setup complete')
 })
+
 
 test('all blogs are returned', async () => {
   const response = await api.get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 
 })
@@ -37,6 +41,32 @@ test('check identifier is named id', async () => {
   expect(response.body[0].id).toBeDefined() //checks if 'id' returns a value
 })
 
+
+test('check post request', async () => {
+  const newBlog = {
+    title: 'Test 1',
+    author: 'Author test',
+    url: 'test.com',
+    likes: 15,
+  }
+
+  const response = await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1) //check if blogs in system increased by one
+
+  const blogContents = blogsAtEnd.find(b => b.id === response.body.id)
+
+  //check if data is saved correctly
+  expect(blogContents.title).toEqual(newBlog.title)
+  expect(blogContents.author).toEqual(newBlog.author)
+  expect(blogContents.url).toEqual(newBlog.url)
+  expect(blogContents.likes).toBe(newBlog.likes)
+})
 
 //
 // Summary: closes the database connection
