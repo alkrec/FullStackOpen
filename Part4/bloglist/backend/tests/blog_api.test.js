@@ -4,6 +4,10 @@ const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app) //wrapping the Express application from app.js creates a 'superagent' object
 
+///
+/// !!!!!!!!!!!!!!CHECK ALL TESTS AGAINST THE MODEL ANSWERS!!!!!!
+///
+
 const Blog = require('../models/blog')
 
 //
@@ -96,6 +100,35 @@ describe('POST request tests', () => {
       .expect(400)
 
   })
+})
+
+
+describe('PUT request tests', () => {
+  test('put succeeds with valid data', async () => {
+    const blog = {
+      title: 'updated Blog',
+      author: 'updated Blog',
+      url: 'updated Blog',
+      likes: 20
+    }
+
+    const blogsBeforeUpdate = await helper.blogsInDb()
+
+    const response = await api.put(`/api/blogs/${blogsBeforeUpdate[0].id}`)
+      .send(blog)
+      .expect(200)
+
+    const blogsAfterUpdate = await helper.blogsInDb()
+
+    const updatedBlogFromDb = blogsAfterUpdate.find(b => b.id === response.body.id)
+    expect(updatedBlogFromDb.title).toEqual(blog.title)
+    expect(updatedBlogFromDb.author).toEqual(blog.author)
+    expect(updatedBlogFromDb.url).toEqual(blog.url)
+    expect(updatedBlogFromDb.likes).toBe(blog.likes)
+
+    expect(blogsBeforeUpdate).toHaveLength(blogsAfterUpdate.length)
+  })
+
 })
 
 
