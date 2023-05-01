@@ -4,7 +4,10 @@ const blogSchema = new mongoose.Schema({  //Design the schema of the blog object
   title: String,
   author: String,
   url: String,
-  likes: Number
+  likes: {
+    type: Number,
+    default: 0
+  }
 })
 
 blogSchema.set('toJSON', { // Format the returned object when fetching data from database

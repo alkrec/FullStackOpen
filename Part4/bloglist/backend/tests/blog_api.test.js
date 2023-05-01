@@ -68,6 +68,20 @@ test('check post request', async () => {
   expect(blogContents.likes).toBe(newBlog.likes)
 })
 
+test('POST request - check if missing likes defaults to 0', async () => {
+  const newBlog = {
+    title: 'testBlog2',
+    author: 'testBlog2',
+    url: 'testBlog2',
+  }
+
+  const response = await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+
+  expect(response.body.likes).toBe(0)
+})
+
 //
 // Summary: closes the database connection
 afterAll(async () => {
