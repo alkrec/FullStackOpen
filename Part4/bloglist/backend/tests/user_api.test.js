@@ -13,8 +13,10 @@ beforeEach(async () => {
 
   const passwordHash = await bcrypt.hash('sekret', 10) //create passwordHash
   const user = new User({ username: 'root', passwordHash }) //create user
+  const user2 = new User({ username: 'root2', passwordHash }) //create user
 
   await user.save() //save user to database
+  await user2.save() //save user to database
 })
 
 test('creation succeeds with a fresh username', async () => {
@@ -61,14 +63,18 @@ test('fail if username is taken', async () => {
 
 
 test('get all users, succeeds', async () => {
-  const usersInDb = helper.usersInDb()
+  const usersInDb = await helper.usersInDb()
 
-  const users = await api.get('/api/users')
+  const response = await api.get('/api/users')
     .expect(200)
     .expect('Content-Type', /application\/json/)
 
+
+  const users = response.body
+  const names = users.map(user => user.name)
+
   expect(users).toHaveLength(usersInDb.length)
-  // expect(users).toContain(usersInDb)
+  expect(names).toContain(usersInDb[0].name)
 })
 
 //
