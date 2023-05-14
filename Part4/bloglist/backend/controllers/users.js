@@ -39,7 +39,9 @@ usersRouter.post('/', async (request, response) => {
 //
 // Summary: GET - return all users
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({})
+  const users = await User
+    .find({})
+    .populate('blogs') // returns the notes associated with the user
   console.log(users)
   response.status(200).json(users)
 })
