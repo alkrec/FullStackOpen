@@ -19,12 +19,12 @@ const unknownEndpoint = (request, response) => {
 
 //
 // Summary: Custom error handler
-const errorHandler = (error, request, response, next) => { 
+const errorHandler = (error, request, response, next) => {
   logger.error(error.message)
 
   if(error.name === 'CastError') {//CastError is caused by an invalid object given as a parameter
     return response.status(400) //SC 400 - Bad Request
-      .send({ error: 'malformatted id' })
+      .send({ error: 'Malformatted id' })
   } else if (error.name === 'ValidationError') { //Validation Error based on Schema requirements
     return response.status(400)//SC 400 - Bad Request
       .json({ error: error.message })
