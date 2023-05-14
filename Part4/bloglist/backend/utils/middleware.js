@@ -28,6 +28,12 @@ const errorHandler = (error, request, response, next) => {
   } else if (error.name === 'ValidationError') { //Validation Error based on Schema requirements
     return response.status(400)//SC 400 - Bad Request
       .json({ error: error.message })
+  } else if (error.name === 'JsonWebTokenError') {
+    return response.status(400)
+      .json({ error: error.message })
+  } else if (error.name === 'TokenExpiredError') {
+    return response.status(401)
+      .json({ error: 'token expired' })
   }
 
   next(error) //if error doesn't belong to above types, then pass the error to the default error handler middleware
