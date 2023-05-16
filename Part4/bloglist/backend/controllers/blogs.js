@@ -3,17 +3,6 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
-
-// //
-// // Summary: Helper function to isolate the token from the header
-// const getTokenFrom = request => {
-//   const authorization = request.get('authorization')
-//   if(authorization && authorization.startsWith('Bearer ')) {
-//     return authorization.replace('Bearer ', '')
-//   }
-//   return null
-// }
-
 //
 // Summary: GET - get all blog posts
 blogsRouter.get('/', async (request, response) => {
@@ -28,14 +17,8 @@ blogsRouter.get('/', async (request, response) => {
 // Summary: POST - create new blog post
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
-
-  const decodedToken = jwt.verify(request.token, process.env.SECRET) //verify the validity of the token, returns the decoded token
-  // console.log(decodedToken)
-  if (!decodedToken.id) { //if the token doesn't contain the user's info, return 'unauthorized' status and failure message
-    return response.status(401).json({ error: 'token invalid' })
-  }
-
-  const user = await User.findById(decodedToken.id)
+  const user = request.user
+  console.log(user.id)
 
   const blog = new Blog({
     title: body.title,
@@ -55,16 +38,13 @@ blogsRouter.post('/', async (request, response) => {
 //
 // Summary: DELETE - remove single blog post
 blogsRouter.delete('/:id', async (request, response) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET) //verify the validity of the token, returns the decoded token
-  if (!decodedToken.id) { //if the token doesn't contain the user's info, return 'unauthorized' status and failure message
-    return response.status(401).json({ error: 'token invalid' })
-  }
+  const user = request.user //get user info from middleware
 
   const blog = await Blog
     .findById(request.params.id)
     .populate('user')
 
-  if(!(decodedToken.id === blog.user.id)) {
+  if(!(user.id === blog.user.id)) { // only users who wrote the blog are able to delete it
     return response.status(401).send('You are not authorized to delete the resource') //authorized
   }
 

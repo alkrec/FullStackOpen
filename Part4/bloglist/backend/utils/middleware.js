@@ -1,4 +1,6 @@
 const logger = require('./logger')
+const jwt = require('jsonwebtoken')
+const User = require('../models/user')
 
 //
 // Summary: Prints info for http requests
@@ -20,11 +22,26 @@ const unknownEndpoint = (request, response) => {
 //
 // Summary: Middleware function to isolate the jwt token from the header
 const tokenExtractor = (request, response, next) => {
-  const authorization = request.get('authorization')
-  if(authorization && authorization.startsWith('Bearer ')) {
+  const authorization = request.get('authorization') //retrieve entire authorization header
+
+  if(authorization && authorization.startsWith('Bearer ')) { //parase the authorization to isolate jwt token
     request.token = authorization.replace('Bearer ', '')
     // console.log(request.token)
   }
+
+  next()
+}
+
+
+//
+// Summary: Middleware function to isolate the jwt token from the header
+const userExtractor = async (request, response, next) => {
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  if (!decodedToken.id) { //if the token doesn't contain the user's info, return 'unauthorized' status and failure message
+    return response.status(401).json({ error: 'token invalid' })
+  }
+
+  request.user = await User.findById(decodedToken.id)
 
   next()
 }
@@ -56,5 +73,6 @@ module.exports = {
   requestLogger,
   unknownEndpoint,
   tokenExtractor,
+  userExtractor,
   errorHandler
 }
