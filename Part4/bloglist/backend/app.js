@@ -31,6 +31,7 @@ app.use(middleware.tokenExtractor)
 // app.use(middleware.userExtractor)
 
 app.use('/api/blogs', middleware.userExtractor, blogsRouter) //defines the route and Router associated with blogs
+// app.use('/api/blogs', blogsRouter) //defines the route and Router associated with blogs
 app.use('/api/users', usersRouter) //defines the route and Router associated with users
 app.use('/api/login', loginRouter) //defines the route and Router associated with login
 

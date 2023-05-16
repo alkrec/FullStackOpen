@@ -1,8 +1,11 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 
-const initialBlogs = [
+
+const initialBlogs = [ //blog list without user information
   {
     _id: '5a422a851b54a676234d17f7',
     title: 'React patterns',
@@ -53,6 +56,41 @@ const initialBlogs = [
   }
 ]
 
+const seedDatabase = async () => {
+  await Blog.deleteMany({}) //clear database
+  await User.deleteMany({}) //clear database
+
+
+  const passwordHash = await bcrypt.hash('sekret', 10) //create passwordHash
+
+  const userWithBlogs = new User({ username: 'userWithBlogs', passwordHash, blogs: initialBlogs }) //create user
+  const savedUser = await userWithBlogs.save() //save user to database
+
+  const userWithoutBlogs = new User({ username: 'userWithoutBlogs', passwordHash }) //create user
+  await userWithoutBlogs.save() //save user to database
+
+
+  const blogsWithUser = initialBlogs.reduce((updatedBlogs, blog) => {
+    return updatedBlogs.concat({ ...blog, user: savedUser })
+  }, [])
+
+  await Blog.insertMany(blogsWithUser) //insert seed data
+}
+
+const getToken = (user) => {
+  const userForToken = { //create object with username and userid
+    username: user.username,
+    id: user._id
+  }
+
+  const token = jwt.sign(  //create a token,
+    userForToken, //The decoded value will be the object in the first parameter of the function
+    process.env.SECRET,//digitally signed with the Secret env variable.  Ensures only people with access to the secret can issue tokens. 
+    { expiresIn: 60*60 }) //token expires in 1 hour (60*60 seconds)
+
+  return token
+}
+
 const nonExistingId = async () => {
   const blog = new Blog({
     title: 'to delete',
@@ -80,6 +118,8 @@ const usersInDb = async () => {
 
 module.exports = {
   initialBlogs,
+  getToken,
+  seedDatabase,
   blogsInDb,
   nonExistingId,
   usersInDb

@@ -13,8 +13,9 @@ const Blog = require('../models/blog')
 //
 // Summary: Initialize the database
 beforeEach( async () => {
-  await Blog.deleteMany({}) //clear database
-  await Blog.insertMany(helper.initialBlogs) //insert seed data
+  // await Blog.deleteMany({}) //clear database
+  // await Blog.insertMany(helper.initialBlogs) //insert seed data
+  await helper.seedDatabase()
 })
 
 describe('GET request tests', () => {
