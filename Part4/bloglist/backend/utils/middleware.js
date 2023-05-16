@@ -18,6 +18,18 @@ const unknownEndpoint = (request, response) => {
 }
 
 //
+// Summary: Middleware function to isolate the jwt token from the header
+const tokenExtractor = (request, response, next) => {
+  const authorization = request.get('authorization')
+  if(authorization && authorization.startsWith('Bearer ')) {
+    request.token = authorization.replace('Bearer ', '')
+    // console.log(request.token)
+  }
+
+  next()
+}
+
+//
 // Summary: Custom error handler
 const errorHandler = (error, request, response, next) => {
   logger.error(error.message)
@@ -43,5 +55,6 @@ const errorHandler = (error, request, response, next) => {
 module.exports = {
   requestLogger,
   unknownEndpoint,
+  tokenExtractor,
   errorHandler
 }

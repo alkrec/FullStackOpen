@@ -4,15 +4,15 @@ const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
 
-//
-// Summary: Helper function to isolate the token from the header
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if(authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
-  }
-  return null
-}
+// //
+// // Summary: Helper function to isolate the token from the header
+// const getTokenFrom = request => {
+//   const authorization = request.get('authorization')
+//   if(authorization && authorization.startsWith('Bearer ')) {
+//     return authorization.replace('Bearer ', '')
+//   }
+//   return null
+// }
 
 //
 // Summary: GET - get all blog posts
@@ -29,8 +29,8 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
 
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET) //verify the validity of the token, returns the decoded token
-  console.log(decodedToken)
+  const decodedToken = jwt.verify(request.token, process.env.SECRET) //verify the validity of the token, returns the decoded token
+  // console.log(decodedToken)
   if (!decodedToken.id) { //if the token doesn't contain the user's info, return 'unauthorized' status and failure message
     return response.status(401).json({ error: 'token invalid' })
   }
