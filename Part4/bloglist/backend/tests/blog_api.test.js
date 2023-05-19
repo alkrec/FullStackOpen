@@ -8,7 +8,7 @@ const api = supertest(app) //wrapping the Express application from app.js create
 /// !!!!!!!!!!!!!!CHECK ALL TESTS AGAINST THE MODEL ANSWERS!!!!!!
 ///
 
-const Blog = require('../models/blog')
+
 
 //
 // Summary: Initialize the database
@@ -36,7 +36,9 @@ describe('GET request tests', () => {
 
 
 describe('POST request tests', () => {
-  test('succeeds with valid data', async () => {
+  test('Post succeeds with valid data', async () => {
+    const token = await helper.getToken()
+
     const newBlog = {
       title: 'Test 1',
       author: 'Author test',
@@ -45,6 +47,7 @@ describe('POST request tests', () => {
     }
 
     const response = await api.post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -63,6 +66,8 @@ describe('POST request tests', () => {
   })
 
   test('missing likes defaults to 0', async () => {
+    const token = await helper.getToken()
+
     const newBlog = {
       title: 'testBlog2',
       author: 'testBlog2',
@@ -70,6 +75,7 @@ describe('POST request tests', () => {
     }
 
     const response = await api.post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
 
@@ -77,6 +83,8 @@ describe('POST request tests', () => {
   })
 
   test('missing title results in 404', async () => {
+    const token = await helper.getToken()
+
     const newBlog = {
       author: 'testBlog2',
       url: 'testBlog2',
@@ -84,12 +92,15 @@ describe('POST request tests', () => {
     }
 
     await api.post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
 
   })
 
   test('missing url results in 404', async () => {
+    const token = await helper.getToken()
+
     const newBlog = {
       title: 'some title',
       author: 'testBlog2',
@@ -97,8 +108,31 @@ describe('POST request tests', () => {
     }
 
     await api.post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
+
+  })
+
+  test('Post fails without token being provided', async () => {
+    // const token = await helper.getToken()
+
+    const newBlog = {
+      title: 'Test 1',
+      author: 'Author test',
+      url: 'test.com',
+      likes: 15,
+    }
+
+    await api.post('/api/blogs')
+      // .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(401) //unauthorized
+      .expect('Content-Type', /application\/json/)
+
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length) //check if blogs in system increased by one
 
   })
 })
@@ -134,10 +168,12 @@ describe('PUT request tests', () => {
 
 
 describe('DELETE request tests', () => {
-  test('delete succeeds with valid id', async () => {
+  test('delete succeeds with valid id and token', async () => {
+    const token = await helper.getToken()
     const blogsAtStart = await helper.blogsInDb()
 
     await api.delete(`/api/blogs/${blogsAtStart[0].id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -146,9 +182,26 @@ describe('DELETE request tests', () => {
   })
 
   test('delete fails with 400 if invalid id', async () => {
+    const token = await helper.getToken()
     const invalidId = '5a3d5da59070081a82a3445'
+
     await api.delete(`/api/blogs/${invalidId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(400)
+  })
+
+  test('Delete fails when user who didnt create blog attempts to delete it', async () => {
+    const invalidToken = await helper.getInvalidToken()
+    const blogsAtStart = await helper.blogsInDb()
+
+    await api.delete(`/api/blogs/${blogsAtStart[0].id}`)
+      .set('Authorization', `Bearer ${invalidToken}`)
+      .expect(401)
+
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length) //check if blogs in system increased by one
+
   })
 })
 

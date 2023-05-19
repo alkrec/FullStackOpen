@@ -24,9 +24,8 @@ const unknownEndpoint = (request, response) => {
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization') //retrieve entire authorization header
 
-  if(authorization && authorization.startsWith('Bearer ')) { //parase the authorization to isolate jwt token
+  if (authorization && authorization.startsWith('Bearer ')) { //parase the authorization to isolate jwt token
     request.token = authorization.replace('Bearer ', '')
-    // console.log(request.token)
   }
 
   next()
@@ -36,12 +35,15 @@ const tokenExtractor = (request, response, next) => {
 //
 // Summary: Middleware function to isolate the jwt token from the header
 const userExtractor = async (request, response, next) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) { //if the token doesn't contain the user's info, return 'unauthorized' status and failure message
-    return response.status(401).json({ error: 'token invalid' })
-  }
+  if (request.token) { //if token exists, then decode the token
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
-  request.user = await User.findById(decodedToken.id)
+    if (!decodedToken.id) { //if the token isn't verified (i.e. doesn't contain the user's info), return 'unauthorized' status and failure message
+      return response.status(401).json({ error: 'token invalid' })
+    }
+
+    request.user = await User.findById(decodedToken.id)
+  }
 
   next()
 }
@@ -51,7 +53,7 @@ const userExtractor = async (request, response, next) => {
 const errorHandler = (error, request, response, next) => {
   logger.error(error.message)
 
-  if(error.name === 'CastError') {//CastError is caused by an invalid object given as a parameter
+  if (error.name === 'CastError') {//CastError is caused by an invalid object given as a parameter
     return response.status(400) //SC 400 - Bad Request
       .send({ error: 'Malformatted id' })
   } else if (error.name === 'ValidationError') { //Validation Error based on Schema requirements

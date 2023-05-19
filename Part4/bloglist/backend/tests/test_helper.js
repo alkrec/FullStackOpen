@@ -56,6 +56,7 @@ const initialBlogs = [ //blog list without user information
   }
 ]
 
+
 const seedDatabase = async () => {
   await Blog.deleteMany({}) //clear database
   await User.deleteMany({}) //clear database
@@ -77,7 +78,8 @@ const seedDatabase = async () => {
   await Blog.insertMany(blogsWithUser) //insert seed data
 }
 
-const getToken = (user) => {
+const getToken = async () => {
+  const user = await User.findOne({ username: 'userWithBlogs' })
   const userForToken = { //create object with username and userid
     username: user.username,
     id: user._id
@@ -85,7 +87,22 @@ const getToken = (user) => {
 
   const token = jwt.sign(  //create a token,
     userForToken, //The decoded value will be the object in the first parameter of the function
-    process.env.SECRET,//digitally signed with the Secret env variable.  Ensures only people with access to the secret can issue tokens. 
+    process.env.SECRET,//digitally signed with the Secret env variable.  Ensures only people with access to the secret can issue tokens.
+    { expiresIn: 60*60 }) //token expires in 1 hour (60*60 seconds)
+
+  return token
+}
+
+const getInvalidToken = async () => {
+  const user = await User.findOne({ username: 'userWithoutBlogs' })
+  const userForToken = { //create object with username and userid
+    username: user.username,
+    id: user._id
+  }
+
+  const token = jwt.sign(  //create a token,
+    userForToken, //The decoded value will be the object in the first parameter of the function
+    process.env.SECRET,//digitally signed with the Secret env variable.  Ensures only people with access to the secret can issue tokens.
     { expiresIn: 60*60 }) //token expires in 1 hour (60*60 seconds)
 
   return token
@@ -119,6 +136,7 @@ const usersInDb = async () => {
 module.exports = {
   initialBlogs,
   getToken,
+  getInvalidToken,
   seedDatabase,
   blogsInDb,
   nonExistingId,

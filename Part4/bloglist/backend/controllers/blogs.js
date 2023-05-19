@@ -1,7 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 
 //
 // Summary: GET - get all blog posts
@@ -17,8 +15,11 @@ blogsRouter.get('/', async (request, response) => {
 // Summary: POST - create new blog post
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
-  const user = request.user
-  console.log(user.id)
+  const user = request.user //get user info from middleware
+
+  if(!user) { //error handles if no token if provided
+    return response.status(401).send({ error: 'Unauthorized.  Token not provided.' })  ///!!!!!!SHOULD THIS ERROR HANDLER BE HERE???????
+  }
 
   const blog = new Blog({
     title: body.title,
@@ -39,6 +40,10 @@ blogsRouter.post('/', async (request, response) => {
 // Summary: DELETE - remove single blog post
 blogsRouter.delete('/:id', async (request, response) => {
   const user = request.user //get user info from middleware
+
+  if(!user) { //error handles if no token if provided
+    return response.status(401).send({ error: 'Unauthorized.  Token not provided.' }) ///!!!!!!SHOULD THIS ERROR HANDLER BE HERE???????
+  }
 
   const blog = await Blog
     .findById(request.params.id)

@@ -24,7 +24,7 @@ loginRouter.post('/', async (request, response) => {
 
   const token = jwt.sign(  //create a token,
     userForToken, //The decoded value will be the object in the first parameter of the function
-    process.env.SECRET,//digitally signed with the Secret env variable.  Ensures only people with access to the secret can issue tokens. 
+    process.env.SECRET,//digitally signed with the Secret env variable.  Ensures only people with access to the secret can issue tokens.
     { expiresIn: 60*60 }) //token expires in 1 hour (60*60 seconds)
 
   response
