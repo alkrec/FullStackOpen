@@ -21,3 +21,14 @@ Content-Type: application/json
   "url": "Some URL",
   "likes": 5
 }
+
+### 
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjQ1ZjljNDUxYzZhZTFmZDk5YTYxY2FiIiwiaWF0IjoxNjg0NzQ4NDU5LCJleHAiOjE2ODQ3NTIwNTl9.wPcvfmk_5Kt8HOzFxfuf5i28uQtZMlefk73uyCPf8-w
+
+{
+  "title": "Some Blog2",
+  "author": "Some Author",
+  "url": "Some URL"
+}
