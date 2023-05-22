@@ -15,38 +15,47 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
+
+  //
+  // Summary: Retrieve all blogs from the database
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+    blogService.getAll().then(blogs => // get blogs from db
+      setBlogs(blogs) //set blogs
     )
   }, [])
 
+
+  //
+  // Summary: Persist login after page refresh
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedInUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+    const loggedUserJSON = window.localStorage.getItem('loggedInUser')  // retrieve logged in user details from local storage
+    if (loggedUserJSON) { //if logged in user exists
+      const user = JSON.parse(loggedUserJSON) // converts JSON into javascript object
+      setUser(user) //set user
+      blogService.setToken(user.token) //set user token for axios authorization
     }
   }, [])
 
+
+  //
+  // Summary: Event handler for login
   const handleLogin = async (event) => {
-    event.preventDefault()
+    event.preventDefault() //stop page refresh
 
     try {
-      const user = await loginService.login({
+      const user = await loginService.login({ //send user credentials for login verification
         username, password
       })
 
-      window.localStorage.setItem(
+      window.localStorage.setItem( // save user details to local storage
         'loggedInUser', JSON.stringify(user)
       )
 
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
+      blogService.setToken(user.token) // set token for axios authentification
+      setUser(user) // set user
+      setUsername('') // clean form
+      setPassword('') // clean form
+    } catch (exception) { // display error message
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
@@ -54,27 +63,31 @@ const App = () => {
     }
   }
 
+
+  //
+  // Summary: Log out user
   const handleLogout = () => {
-    setUser(null);
-    window.localStorage.removeItem('loggedInUser')
+    setUser(null); // empty user variable
+    window.localStorage.removeItem('loggedInUser') // empty user from local storage
   }
 
 
+  //
+  // Summary: Submit new blog
   const handleSubmit = async (event) => {
-    event.preventDefault()
+    event.preventDefault() // stop page refresh
 
-    const newBlog = { //unnecessary to write for example, title: title in ES6
+    const newBlog = { //Create new blog object, from form inputs.  note: unnecessary to write for example, title: title in ES6
       title,
       author,
       url
     }
 
-    const createdBlog = await blogService.create(newBlog)
-    setBlogs(blogs.concat(createdBlog))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    console.log(createdBlog)
+    const createdBlog = await blogService.create(newBlog) //Post request with new blog object
+    setBlogs(blogs.concat(createdBlog)) //add new blog to blogs array
+    setTitle('') //clean form
+    setAuthor('') //clean form
+    setUrl('') //clean form
   }
 
 
