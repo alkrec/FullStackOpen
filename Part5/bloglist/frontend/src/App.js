@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -99,7 +100,7 @@ const App = () => {
         setNotificationInfo(null)
       }, 5000)
     } catch (error) {
-      setNotificationInfo({ message: `${error.response.data.error}`, type:'error' })
+      setNotificationInfo({ message: `${error.response.data.error}`, type: 'error' })
       setTimeout(() => {
         setNotificationInfo(null)
       }, 5000)
@@ -149,32 +150,34 @@ const App = () => {
         <button onClick={handleLogout}>Logout</button>
       </p>
 
-      <h2>create new</h2>
-      <form onSubmit={handleSubmit}>
-        <p>title:
-          <input
-            type="text"
-            value={title}
-            name="Title"
-            onChange={(event) => { setTitle(event.target.value) }} />
-        </p>
-        <p>author:
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={(event) => { setAuthor(event.target.value) }} />
-        </p>
-        <p>
-          url:
-          <input
-            type="text"
-            value={url}
-            name="Url"
-            onChange={(event) => { setUrl(event.target.value) }} />
-        </p>
-        <button type="submit">create</button>
-      </form>
+      {/* <h2>create new</h2> */}
+      <Togglable buttonLabel="create new">
+        <form onSubmit={handleSubmit}>
+          <p>title:
+            <input
+              type="text"
+              value={title}
+              name="Title"
+              onChange={(event) => { setTitle(event.target.value) }} />
+          </p>
+          <p>author:
+            <input
+              type="text"
+              value={author}
+              name="Author"
+              onChange={(event) => { setAuthor(event.target.value) }} />
+          </p>
+          <p>
+            url:
+            <input
+              type="text"
+              value={url}
+              name="Url"
+              onChange={(event) => { setUrl(event.target.value) }} />
+          </p>
+          <button type="submit">create</button>
+        </form>
+      </Togglable>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
