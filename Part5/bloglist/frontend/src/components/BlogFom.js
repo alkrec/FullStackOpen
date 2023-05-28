@@ -1,0 +1,58 @@
+import { useState } from 'react'
+
+const BlogForm = (props) => {
+  const { createBlog } = props
+
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
+  //
+  // Summary: Handles form submit
+  const handleSubmit = async (event) => {
+    event.preventDefault() // stop page refresh
+
+    const newBlog = { //Create new blog object, from form inputs.  note: unnecessary to write for example, title: title in ES6
+      title,
+      author,
+      url
+    }
+
+    /// ?????DOES THIS HAVE TO BE AWAIT???????
+    await createBlog(newBlog) //calls the createBlog function which is passed as a prop
+
+    setTitle('') //clean form
+    setAuthor('') //clean form
+    setUrl('') //clean form
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <p>title:
+        <input
+          type="text"
+          value={title}
+          name="Title"
+          onChange={(event) => { setTitle(event.target.value) }} />
+      </p>
+      <p>author:
+        <input
+          type="text"
+          value={author}
+          name="Author"
+          onChange={(event) => { setAuthor(event.target.value) }} />
+      </p>
+      <p>
+        url:
+        <input
+          type="text"
+          value={url}
+          name="Url"
+          onChange={(event) => { setUrl(event.target.value) }} />
+      </p>
+      <button type="submit">create</button>
+    </form>
+  )
+}
+
+export default BlogForm
