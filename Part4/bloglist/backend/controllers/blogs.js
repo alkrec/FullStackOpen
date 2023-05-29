@@ -18,7 +18,7 @@ blogsRouter.post('/', async (request, response) => {
   const user = request.user //get user info from middleware
 
   if(!user) { //error handles if no token if provided
-    return response.status(401).send({ error: 'Unauthorized.  Token not provided.' })  ///!!!!!!SHOULD THIS ERROR HANDLER BE HERE???????
+    return response.status(401).send({ error: 'Unauthorized.  Token not provided.' })
   }
 
   const blog = new Blog({
@@ -30,10 +30,12 @@ blogsRouter.post('/', async (request, response) => {
   })
 
   const savedBlog = await blog.save()
+  const savedBlogWithUserInfo = await Blog.findById(savedBlog._id).populate('user') //????? IS THIS CORRECT? FROM EXERCISE 5.8
+  console.log(savedBlogWithUserInfo)
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 
-  response.status(201).json(savedBlog)
+  response.status(201).json(savedBlogWithUserInfo)
 })
 
 //
@@ -42,7 +44,7 @@ blogsRouter.delete('/:id', async (request, response) => {
   const user = request.user //get user info from middleware
 
   if(!user) { //error handles if no token if provided
-    return response.status(401).send({ error: 'Unauthorized.  Token not provided.' }) ///!!!!!!SHOULD THIS ERROR HANDLER BE HERE???????
+    return response.status(401).send({ error: 'Unauthorized.  Token not provided.' }) 
   }
 
   const blog = await Blog
