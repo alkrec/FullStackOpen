@@ -110,14 +110,24 @@ const App = () => {
 
       setBlogs(updatedBlogs) //blogs array with updated blog
     } catch (error) {
-      // setNotificationInfo({ message: `${error.response.data.error}`, type: 'error' })
-      // setTimeout(() => {
-      //   setNotificationInfo(null)
-      // }, 5000)
+      setNotificationInfo({ message: `${error.response.data.error}`, type: 'error' })
+      setTimeout(() => {
+        setNotificationInfo(null)
+      }, 5000)
       console.log(error)
     }
 
   }
+
+  const sortedBlogs = blogs.sort((x,y) => {  //???? IS THIS CORRECT FOR EXERCISE 5.10????
+    if (x.likes < y.likes) {
+      return 1;
+    }
+    if (x.likes > y.likes) {
+      return -1;
+    }
+    return 0;
+  })
 
 
   if (user === null) {
@@ -162,7 +172,7 @@ const App = () => {
       <Togglable buttonLabel="create new">
         <BlogForm createBlog={createBlog} />
       </Togglable>
-      {blogs.map(blog =>
+      {sortedBlogs.map(blog =>
         <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
       )}
     </div>
