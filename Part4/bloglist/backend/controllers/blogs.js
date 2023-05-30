@@ -62,17 +62,16 @@ blogsRouter.delete('/:id', async (request, response) => {
 //
 // Summary: PUT - update single blog post
 blogsRouter.put('/:id', async (request, response) => {
-  const { title, author, url, likes } = request.body
+  const { title, author, url, likes, user } = request.body
 
-  const updatedBlog = await Blog.findByIdAndUpdate(
+  await Blog.findByIdAndUpdate(
     request.params.id,
-    { title, author, url, likes },
+    { title, author, url, likes, user },
     { new: true, runValidators: true, context: 'query' }
   )
 
-  console.log(updatedBlog)
-
-  response.status(200).json(updatedBlog)
+  const updatedBlogWithUserInfo = await Blog.findById(request.params.id).populate('user') //????? IS THIS CORRECT? FROM EXERCISE 5.9
+  response.status(200).json(updatedBlogWithUserInfo)
 })
 
 module.exports = blogsRouter

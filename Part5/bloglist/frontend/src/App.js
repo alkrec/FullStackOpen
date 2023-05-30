@@ -95,6 +95,31 @@ const App = () => {
 
   }
 
+
+  //
+  // Summary: Sends HTTP PUT request for updated Blog
+  const updateBlog = async (id, blog) => {
+    try {
+      const updatedBlog = await blogService.update(id, blog) //Post request with new blog object
+      const updatedBlogs = blogs.reduce((newArray, item) => { ///????? IS THIS THE PROPER WAY TO UPDATE THE BLOGS ARRAY?????
+        if (item.id === id) {
+          return newArray.concat(updatedBlog)
+        }
+        return newArray.concat(item)
+      },[])
+
+      setBlogs(updatedBlogs) //blogs array with updated blog
+    } catch (error) {
+      // setNotificationInfo({ message: `${error.response.data.error}`, type: 'error' })
+      // setTimeout(() => {
+      //   setNotificationInfo(null)
+      // }, 5000)
+      console.log(error)
+    }
+
+  }
+
+
   if (user === null) {
     return (
       <div>
@@ -138,7 +163,7 @@ const App = () => {
         <BlogForm createBlog={createBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
       )}
     </div>
   )
