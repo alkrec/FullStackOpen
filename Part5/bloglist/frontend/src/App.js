@@ -116,7 +116,18 @@ const App = () => {
       }, 5000)
       console.log(error)
     }
+  }
 
+
+  //
+  // Summary: Handles delete request
+  const deleteBlog = async (id) => {
+    try {
+      await blogService.remove(id)
+      const updatedBlogs = blogs.filter((blog) => blog.id !== id)
+    } catch (error) {
+      
+    }
   }
 
   const sortedBlogs = blogs.sort((x,y) => {  //???? IS THIS CORRECT FOR EXERCISE 5.10????
@@ -173,7 +184,13 @@ const App = () => {
         <BlogForm createBlog={createBlog} />
       </Togglable>
       {sortedBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
+        <Blog 
+          key={blog.id} 
+          blog={blog}
+          user={user}
+          updateBlog={updateBlog}
+          deleteBlog={deleteBlog}
+        />
       )}
     </div>
   )
