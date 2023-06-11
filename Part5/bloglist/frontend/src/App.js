@@ -123,8 +123,10 @@ const App = () => {
   // Summary: Handles delete request
   const deleteBlog = async (id) => {
     try {
+      // console.log(id)
       await blogService.remove(id)
       const updatedBlogs = blogs.filter((blog) => blog.id !== id)
+      setBlogs(updatedBlogs)
     } catch (error) {
       
     }
