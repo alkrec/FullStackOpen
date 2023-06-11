@@ -70,7 +70,7 @@ const App = () => {
   //
   // Summary: Log out user
   const handleLogout = () => {
-    setUser(null); // empty user variable
+    setUser(null) // empty user variable
     window.localStorage.removeItem('loggedInUser') // empty user from local storage
   }
 
@@ -128,18 +128,18 @@ const App = () => {
       const updatedBlogs = blogs.filter((blog) => blog.id !== id)
       setBlogs(updatedBlogs)
     } catch (error) {
-      
+      console.log(error)
     }
   }
 
   const sortedBlogs = blogs.sort((x,y) => {  //???? IS THIS CORRECT FOR EXERCISE 5.10????
     if (x.likes < y.likes) {
-      return 1;
+      return 1
     }
     if (x.likes > y.likes) {
-      return -1;
+      return -1
     }
-    return 0;
+    return 0
   })
 
 
@@ -186,8 +186,8 @@ const App = () => {
         <BlogForm createBlog={createBlog} />
       </Togglable>
       {sortedBlogs.map(blog =>
-        <Blog 
-          key={blog.id} 
+        <Blog
+          key={blog.id}
           blog={blog}
           user={user}
           updateBlog={updateBlog}

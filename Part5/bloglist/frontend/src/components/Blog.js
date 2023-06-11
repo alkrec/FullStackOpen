@@ -1,19 +1,20 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = (props) => {
   const { blog, updateBlog, user, deleteBlog } = props
   const [visible, setVisible] = useState(false)
   const [likes, setLikes] = useState(blog.likes)
-  
+
 
   const hideWhenVisible = { display: visible ? 'none' : '' } // when visible is true then display: 'none'. When visible false display then display: ''
   const showWhenVisible = { display: visible ? '' : 'none' } // when visible is true then display: ''. When visible false display then display: 'none'
-  
+
 
   const handleLikeEvent = () => {
-    const { id, ...updatedBlog } = { ...blog, likes: likes + 1, user: blog.user.id} //create a copy of blog, with the updated value for likes. Then destructure the updated copy of the object, into id, and the rest of the key/values
+    const { id, ...updatedBlog } = { ...blog, likes: likes + 1, user: blog.user.id } //create a copy of blog, with the updated value for likes. Then destructure the updated copy of the object, into id, and the rest of the key/values
     updateBlog(id, updatedBlog)
-    
+
     setLikes(likes + 1)
   }
 
@@ -22,7 +23,7 @@ const Blog = (props) => {
       deleteBlog(blog.id)
     }
   }
-  
+
 
   const blogStyle = {
     paddingTop: 10,
@@ -31,7 +32,7 @@ const Blog = (props) => {
     borderWidth: 1,
     marginBottom: 5,
   }
-  
+
   return (
     <div style={blogStyle}>
       <div style={hideWhenVisible}>
@@ -57,6 +58,13 @@ const Blog = (props) => {
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  updateBlog: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  deleteBlog: PropTypes.func.isRequired
 }
 
 export default Blog
