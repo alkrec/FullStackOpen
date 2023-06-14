@@ -49,4 +49,15 @@ describe('<Blog />', () => {
     expect(div).toHaveTextContent(blog.url)
     expect(div).toHaveTextContent(blog.likes)
   })
+
+
+  test('like button calls the function once', async () => {
+    const user = userEvent.setup()
+    const button = screen.getByText('like')
+
+    await user.click(button)
+    await user.click(button)
+
+    expect(mockUpdateHandler.mock.calls).toHaveLength(2)
+  })
 })
