@@ -35,13 +35,13 @@ const Blog = (props) => {
 
   return (
     <div style={blogStyle}>
-      <div style={hideWhenVisible}>
+      <div style={hideWhenVisible} className="defaultContent">
         <p>
           {blog.title} {blog.author}
           <button onClick={() => setVisible(!visible)}>view</button>
         </p>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className="togglableContent">
         <p>
           {blog.title} {blog.author}
           <button onClick={() => setVisible(!visible)}>hide</button>
