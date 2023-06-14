@@ -33,6 +33,7 @@ const BlogForm = (props) => {
           type="text"
           value={title}
           name="Title"
+          placeholder="enter title"
           onChange={(event) => { setTitle(event.target.value) }} />
       </p>
       <p>author:
@@ -40,6 +41,7 @@ const BlogForm = (props) => {
           type="text"
           value={author}
           name="Author"
+          placeholder="enter author"
           onChange={(event) => { setAuthor(event.target.value) }} />
       </p>
       <p>
@@ -48,6 +50,7 @@ const BlogForm = (props) => {
           type="text"
           value={url}
           name="Url"
+          placeholder="enter url"
           onChange={(event) => { setUrl(event.target.value) }} />
       </p>
       <button type="submit">create</button>
