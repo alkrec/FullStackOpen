@@ -30,6 +30,7 @@ const BlogForm = (props) => {
     <form onSubmit={handleSubmit}>
       <p>title:
         <input
+          id="title-input"
           type="text"
           value={title}
           name="Title"
@@ -38,6 +39,7 @@ const BlogForm = (props) => {
       </p>
       <p>author:
         <input
+          id="author-input"
           type="text"
           value={author}
           name="Author"
@@ -47,13 +49,14 @@ const BlogForm = (props) => {
       <p>
         url:
         <input
+          id="url-input"
           type="text"
           value={url}
           name="Url"
           placeholder="enter url"
           onChange={(event) => { setUrl(event.target.value) }} />
       </p>
-      <button type="submit">create</button>
+      <button id="submit-button" type="submit">create</button>
     </form>
   )
 }

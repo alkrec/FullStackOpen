@@ -27,7 +27,7 @@ describe('Note app', function() {
       cy.contains('Johnny logged in')
     })
 
-    it.only('fails with wrong credentials', function() {
+    it('fails with wrong credentials', function() {
       cy.get('#username').type('roott')
       cy.get('#password').type('SomePassworddd')
       cy.get('#login-button').click()
@@ -39,7 +39,24 @@ describe('Note app', function() {
 
       cy.get('html')
         .should('not.contain', 'Johnny logged in')
+    })
+  })
 
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'root', password: 'SomePassword' })
+    })
+
+    it.only('A blog can be created', function() {
+      cy.contains('create new').click()
+
+      cy.get('#title-input').type('some title')
+      cy.get('#author-input').type('some author')
+      cy.get('#url-input').type('some url')
+      cy.get('#submit-button').click()
+
+      cy.contains('some title')
+      cy.contains('some author')
     })
   })
 })
