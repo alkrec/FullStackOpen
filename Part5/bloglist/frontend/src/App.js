@@ -152,6 +152,7 @@ const App = () => {
           <div>
             username
             <input
+              id="username"
               type="text"
               value={username}
               name="Username"
@@ -161,13 +162,14 @@ const App = () => {
           <div>
             password
             <input
+              id="password"
               type="password"
               value={password}
               name="Password"
               onChange={(({ target }) => setPassword(target.value))}  //An object is given to them as a parameter, and they destructure the field target from the object and save its value to the state.
             />
           </div>
-          <button type="submit">login</button>
+          <button id="login-button" type="submit">login</button>
         </form>
       </div>
     )
