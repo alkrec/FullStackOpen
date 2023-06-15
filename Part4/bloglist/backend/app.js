@@ -35,6 +35,11 @@ app.use('/api/blogs', middleware.userExtractor, blogsRouter) //defines the route
 app.use('/api/users', usersRouter) //defines the route and Router associated with users
 app.use('/api/login', loginRouter) //defines the route and Router associated with login
 
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
+
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
