@@ -34,7 +34,7 @@ const Blog = (props) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       <div style={hideWhenVisible} className="defaultContent">
         <p>
           {blog.title} {blog.author}

@@ -108,12 +108,27 @@ describe('Note app', function() {
         cy.should('not.contain', 'Some author1') //check if blog is no longer present
       })
 
-      it.only('delete button visible only to user who created it', function() {
+      it('delete button visible only to user who created it', function() {
         cy.contains('Some author1').parent().find('button').click()
         cy.contains('Some author1').parent().parent().find('.remove-button') //checks to see if remove button is visible to user who created it
 
         cy.contains('Some author2').parent().find('button').click()
         cy.contains('Some author2').parent().parent().should('not.contain', 'remove')
+      })
+
+      it('blogs are ordered by number of likes', function() {
+        cy.contains('Some author2').parent().find('button').click()
+        cy.contains('Some author2').parent().parent().find('.like-button').click()
+        cy.wait(500)
+        cy.contains('Some author2').parent().parent().find('.like-button').click()
+
+        cy.contains('Some author1').parent().find('button').click()
+        cy.contains('Some author1').parent().parent().find('.like-button').click()
+        cy.wait(500)
+
+        cy.get('.blog').eq(0).should('contain', 'Some author2')
+        cy.get('.blog').eq(1).should('contain', 'Some author1')
+
       })
     })
   })
