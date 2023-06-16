@@ -49,7 +49,7 @@ const Blog = (props) => {
         <p>{blog.url}</p>
         <p>
           likes:{likes}
-          <button onClick={handleLikeEvent}>like</button>
+          <button className="like-button" onClick={handleLikeEvent}>like</button>
         </p>
         <p>{blog.user.name} </p>
         {

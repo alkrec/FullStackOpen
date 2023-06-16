@@ -1,12 +1,12 @@
 describe('Note app', function() {
+  const user = {
+    name: 'Johnny',
+    username: 'root',
+    password: 'SomePassword'
+  }
   beforeEach(function() {
     cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`) //clears the database
 
-    const user = {
-      name: 'Johnny',
-      username: 'root',
-      password: 'SomePassword'
-    }
     cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
     cy.visit('')
   })
@@ -47,7 +47,7 @@ describe('Note app', function() {
       cy.login({ username: 'root', password: 'SomePassword' })
     })
 
-    it.only('A blog can be created', function() {
+    it('A blog can be created', function() {
       cy.contains('create new').click()
 
       cy.get('#title-input').type('some title')
@@ -57,6 +57,41 @@ describe('Note app', function() {
 
       cy.contains('some title')
       cy.contains('some author')
+    })
+
+    describe('logged in user and blogs exist', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'Some title',
+          author: 'Some author',
+          url: 'Some url',
+          likes: 0,
+          user: user
+        })
+
+        cy.createBlog({
+          title: 'Some title1',
+          author: 'Some author1',
+          url: 'Some url1',
+          likes: 0,
+          user: user
+        })
+
+        cy.createBlog({
+          title: 'Some title2',
+          author: 'Some author2',
+          url: 'Some url2',
+          likes: 0,
+          user: user
+        })
+      })
+
+      it.only('user can like a blog', function() {
+        cy.contains('Some author1').parent().find('button').click()
+        cy.contains('Some author1').parent().parent().find('.like-button').click()
+        // cy.contains('Some author1')
+        cy.contains('Some author1').parent().parent().contains(1) //check if likes on blog is 1
+      })
     })
   })
 })
