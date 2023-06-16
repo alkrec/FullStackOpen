@@ -53,7 +53,7 @@ const Blog = (props) => {
         </p>
         <p>{blog.user.name} </p>
         {
-          blog.user.username === user.username && <button onClick={handleDelete}>remove</button>
+          blog.user.username === user.username && <button className="remove-button" onClick={handleDelete}>remove</button>
         }
       </div>
     </div>

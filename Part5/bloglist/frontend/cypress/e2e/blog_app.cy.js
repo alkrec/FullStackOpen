@@ -1,13 +1,21 @@
 describe('Note app', function() {
-  const user = {
+  const user1 = {
     name: 'Johnny',
     username: 'root',
     password: 'SomePassword'
   }
+
+  const user2 = {
+    name: 'Second User',
+    username: 'second_user',
+    password: 'SomePassword'
+  }
+
   beforeEach(function() {
     cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`) //clears the database
 
-    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
+    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user1)
+    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user2)
     cy.visit('')
   })
 
@@ -45,6 +53,7 @@ describe('Note app', function() {
   describe('When logged in', function() {
     beforeEach(function() {
       cy.login({ username: 'root', password: 'SomePassword' })
+      // cy.login({ username: 'second_user', password: 'SomePassword' })
     })
 
     it('A blog can be created', function() {
@@ -66,7 +75,6 @@ describe('Note app', function() {
           author: 'Some author',
           url: 'Some url',
           likes: 0,
-          user: user
         })
 
         cy.createBlog({
@@ -74,23 +82,30 @@ describe('Note app', function() {
           author: 'Some author1',
           url: 'Some url1',
           likes: 0,
-          user: user
         })
 
-        cy.createBlog({
+        cy.createBlogFromDifferentUser({
+          username: 'second_user',
+          password: 'SomePassword',
           title: 'Some title2',
           author: 'Some author2',
           url: 'Some url2',
           likes: 0,
-          user: user
         })
       })
 
-      it.only('user can like a blog', function() {
+      it('user can like a blog', function() {
         cy.contains('Some author1').parent().find('button').click()
         cy.contains('Some author1').parent().parent().find('.like-button').click()
-        // cy.contains('Some author1')
+
         cy.contains('Some author1').parent().parent().contains(1) //check if likes on blog is 1
+      })
+
+      it('user can delete blog if they created it', function() {
+        cy.contains('Some author1').parent().find('button').click()
+        cy.contains('Some author1').parent().parent().find('.remove-button').click()
+
+        cy.should('not.contain', 'Some author1') //check if blog is no longer present
       })
     })
   })
