@@ -27,10 +27,12 @@ const App = () => {
     })
   }
 
+  const byVotes = (b1, b2) => b2.votes - b1.votes
+
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote =>
+      {anecdotes.sort(byVotes).map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
