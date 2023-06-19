@@ -24,6 +24,11 @@ const reducer = (state = initialState, action) => {
   console.log('action', action)
 
   switch(action.type) {
+    // Adding a new anecdote to the anecdate array
+    case 'ADD': {
+      return state.concat(action.payload) //use concat, which returns a new array so that immutability is intact
+    }
+    // Handles the increase in votes when vote button pressed
     case 'VOTE': {
       const id = action.payload.id
       const anecdoteToChange = state.find(n => n.id === id)
