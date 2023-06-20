@@ -1,3 +1,5 @@
+import { createSlice } from '@reduxjs/toolkit'
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -19,46 +21,77 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
 
-  switch(action.type) {
-    // Adding a new anecdote to the anecdate array
-    case 'ADD': {
-      return state.concat(action.payload) //use concat, which returns a new array so that immutability is intact
-    }
-    // Handles the increase in votes when vote button pressed
-    case 'VOTE': {
-      const id = action.payload.id
-      const anecdoteToChange = state.find(n => n.id === id)
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState,
+  reducers: {
+    createAnecdote(state, action) {
+      const content = action.payload
+      state.push({ //typically this violates the immutability rule of changes to state, but the Immer library handles this
+        content: content,
+        votes: 0,
+        id: getId()
+      })
+    },
+    voteForAnecdote(state, action) {
+      const id = action.payload
+      const anecdoteToChange = state.find(a => a.id === id)
       const changedAnecdote = {
         ...anecdoteToChange,
-        votes: anecdoteToChange.votes + 1 
+        votes: anecdoteToChange.votes + 1
       }
+      
       return state.map(anecdote => anecdote.id !== id ? anecdote : changedAnecdote)
     }
-    default:
-      return state
   }
-}
+})
 
-export const createAnecdote = (content) => {
-    return {
-      type: 'ADD',
-      payload: {
-        id: getId(),
-        content: content,
-        votes: 0
-      }
-    }
-}
+export const { createAnecdote, voteForAnecdote } = anecdoteSlice.actions
+export default anecdoteSlice.reducer
 
-export const voteAnecdote = (id) => {
-  return {
-    type: 'VOTE',
-    payload: { id }
-  }
-}
 
-export default reducer
+
+// const reducer = (state = initialState, action) => {
+//   console.log('state now: ', state)
+//   console.log('action', action)
+
+//   switch(action.type) {
+//     // Adding a new anecdote to the anecdate array
+//     case 'ADD': {
+//       return state.concat(action.payload) //use concat, which returns a new array so that immutability is intact
+//     }
+//     // Handles the increase in votes when vote button pressed
+//     case 'VOTE': {
+//       const id = action.payload.id
+//       const anecdoteToChange = state.find(n => n.id === id)
+//       const changedAnecdote = {
+//         ...anecdoteToChange,
+//         votes: anecdoteToChange.votes + 1 
+//       }
+//       return state.map(anecdote => anecdote.id !== id ? anecdote : changedAnecdote)
+//     }
+//     default:
+//       return state
+//   }
+// }
+
+// export const createAnecdote = (content) => {
+//     return {
+//       type: 'ADD',
+//       payload: {
+//         id: getId(),
+//         content: content,
+//         votes: 0
+//       }
+//     }
+// }
+
+// export const voteAnecdote = (id) => {
+//   return {
+//     type: 'VOTE',
+//     payload: { id }
+//   }
+// }
+
+// export default reducer
