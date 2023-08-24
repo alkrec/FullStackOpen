@@ -12,7 +12,7 @@ const AnecdoteForm = () => {
       notificationDispatch({ type: 'ADDED', anecdote: data.content})
       queryClient.invalidateQueries('anecdotes')
     },
-    onError: (data) => {
+    onError: () => {
       notificationDispatch({ type: 'ERROR' })
     }
   })
